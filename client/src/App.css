@@ -11,3 +11,12 @@
   background-color: azure;
   border: 5px solid rgb(42, 16, 189);
 }
+.inputloged{
+  position: absolute;
+  height: 50px;
+  width: 300px;
+  place-items: center;
+  background-color: rgb(163, 61, 35);
+  border: 5px solid rgb(42, 16, 189);
+  bottom: 10px;
+}

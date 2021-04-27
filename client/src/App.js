@@ -1,36 +1,67 @@
-import React,{useState,useEffect} from 'react';
-import io from 'socket.io-client';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import io from "socket.io-client";
+import "./App.css";
 
 let socket;
-const PORT = 'localhost:3011/'
+const PORT = "localhost:3011/";
 
 function App() {
-  const [user,setUser]= useState(true);
-  const [username,setUsername] = useState("");
-  const [room,setRoom] = useState("");
+  const [logedin, setLogedin] = useState(false);
+  const [username, setUsername] = useState("");
+  const [room, setRoom] = useState("");
+  const [message, setMessage] = useState("");
+  const [logmessage, setLogmessage] = useState([]);
+
+  useEffect(() => {
+    socket = io(PORT);
+  }, [PORT]);
 
   useEffect(()=>{
-    socket = io(PORT)
+    socket.on('disp',(sermsg)=>{
+      setLogmessage([...logmessage, sermsg])
+    })
+    console.log("hhhhhhhhhhhhh",logmessage);
+  },[logmessage])
 
-  },[PORT])
+  const joinChat = () => {
+    console.log("client joined");
+    socket.emit("joining", room);
+    setLogedin(true);
+    
+  };
 
-  const sendChat = ()=>{
-    console.log("sending from client");
-    socket.emit('chat',room)
-  }
+  const sendChat = () => {
+    console.log("sending chat from client");
+    socket.emit("chatsend", {room:room,message});
+    setMessage("")
+  };
 
   return (
-    
     <div className="App">
-      {!user ? <h1>not loged in </h1>:
-      <div className="input">
-        <input type="text" placeholder="user" onChange = {(e)=>setUser(e.target.value)}/>
-        <input type="text" placeholder="room" onChange = { (e)=>setRoom(e.target.value)}/>
-        <button onClick={sendChat}>submit</button>
-      </div>
-
-      }
+      {!logedin ? (
+        <div className="input">
+          <input
+            type="text"
+            placeholder="user"
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="room"
+            onChange={(e) => setRoom(e.target.value)}
+          />
+          <button onClick={joinChat}>join chat</button>
+        </div>
+      ) : (
+        <div className="input">
+          <p>{logmessage}</p>
+          <div className="inputloged">
+            
+            <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} />
+            <button onClick={sendChat}>send msg</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
