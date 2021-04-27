@@ -1,0 +1,13 @@
+.App {
+  display: grid;
+  place-items:center;
+  height: 100vh;
+  background-color: aquamarine;
+}
+
+.input{
+  height: 300px;
+  width: 500px;
+  background-color: azure;
+  border: 5px solid rgb(42, 16, 189);
+}
