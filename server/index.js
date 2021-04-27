@@ -15,6 +15,12 @@ const server = app.listen("3011",()=>{
 
 io.on('connection',(socket)=>{
     console.log(socket.id)
+    console.log("user connected")
+
+    socket.on('chat',(data)=>{
+        console.log(data);
+        socket.join(data)
+    })
 
     socket.on('disconnect',()=>{
         console.log("user disconnected")
